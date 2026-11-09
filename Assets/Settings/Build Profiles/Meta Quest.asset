@@ -169,7 +169,11 @@ MonoBehaviour:
     - line: '|   visionOSBundleVersion: 1.0'
     - line: '|   tvOSBundleVersion: 1.0'
     - line: '|   bundleVersion: 1.0'
-    - line: '|   preloadedAssets: []'
+    - line: '|   preloadedAssets:'
+    - line: '|   - {fileID: 9030113687040111788, guid: 4b3de149e50ea0c4f8ad04c79b9f12ec,
+        type: 2}'
+    - line: '|   - {fileID: -348627342837204857, guid: 3dd11dcd12272e54f8a19d8224e35f53,
+        type: 2}'
     - line: '|   metroInputSource: 0'
     - line: '|   wsaTransparentSwapchain: 0'
     - line: '|   m_HolographicPauseOnTrackingLoss: 1'
@@ -1077,7 +1081,7 @@ MonoBehaviour:
         m_ExportAsGoogleAndroidProject: 0
         m_DebugSymbolLevel: 1
         m_DebugSymbolFormat: 5
-        m_CurrentDeploymentTargetId: 2G97C5ZH7802Z1
+        m_CurrentDeploymentTargetId: __builtin__target_default
         m_BuildType: 2
         m_LinkTimeOptimization: 0
         m_BuildAppBundle: 0
