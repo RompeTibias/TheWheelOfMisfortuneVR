@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 
 public class ShopManager : MonoBehaviour
@@ -15,12 +17,41 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private List<ShopSlot> slots = new List<ShopSlot>();
     [Header("Economia")]
     [SerializeField] private int money;
-
-    private ShopSlot slotShop;
-
     
+    [SerializeField] private ItemPickUp itemPickUp;
+    [SerializeField] private Transform buy;
+    [SerializeField] private int buttonPrice;
+    private bool bellReady ;
+
+    private void Start()
+    {
+        
+        foreach (ShopSlot slot in slots)
+        {
+            slot.SetManager(this) ;
+        }
+    }
+
+    public void TryReload()
+    {
+        if (!bellReady) return;
+        
+        bellReady = false;
+        
+        if(money < buttonPrice) return;
+        
+        money -= buttonPrice;
+        
+        Reload();
+
+        
+    }
+
+    public void RearmBell()
+    {
+        bellReady = true;
+    }
     
-    [ContextMenu("Recargar")]
     public void Reload()
     {
         ShopReload();
@@ -71,4 +102,22 @@ public class ShopManager : MonoBehaviour
         }    
             
     }
+
+    public void TryBuy(ShopSlot slot)
+    {
+        if (slot == null) return;
+
+        var item = slot.CurrentItem;
+
+        if (money < slot.CurrentItem.Price) return;
+        
+        money -= slot.CurrentItem.Price;
+        
+        Instantiate(itemPickUp.gameObject, buy.position, buy.rotation);
+        
+        itemPickUp.SetUp(item);
+
+        slot.ClearSlot();
+    }
+    
 }

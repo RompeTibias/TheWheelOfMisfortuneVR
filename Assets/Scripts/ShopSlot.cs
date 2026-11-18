@@ -9,7 +9,7 @@ public class ShopSlot : MonoBehaviour
     [SerializeField] private GameObject visual;
     private ShopItemData currentItem;
     [SerializeField] private ShopItemData testItem;
-
+    ShopManager managerShop;
     public bool IsEmpty => currentItem == null;
 
     public ShopItemData CurrentItem
@@ -19,7 +19,11 @@ public class ShopSlot : MonoBehaviour
             return currentItem;   
         }   
     }
-   
+
+    public void SetManager(ShopManager manager)
+    {
+        managerShop = manager;
+    }
     
     public void ShowItem(ShopItemData item)
     {

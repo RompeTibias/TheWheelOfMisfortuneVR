@@ -73,13 +73,17 @@ public class managerPanel : MonoBehaviour
         {
             if (filaActual >= 4) break;
 
-            if (lineas[filaActual]== "")
+            //if (lineas[filaActual]== "")
+            //{
+            //    lineas[filaActual] = palabra;
+            //}
+            //else
             {
-                lineas[filaActual] = palabra;
-            }
-            else
-            {
-                if (lineas[filaActual].Length + 1 + palabra.Length <=14)
+                if (lineas[filaActual].Length == 0)
+                {
+                    lineas[filaActual] = palabra;
+                }
+                else if (lineas[filaActual].Length + 1 + palabra.Length <= 14)
                 {
                     lineas[filaActual] += " " + palabra;
                 }
@@ -97,12 +101,16 @@ public class managerPanel : MonoBehaviour
          List<List<GameObject>>todasLasFilas = new List<List<GameObject>> { fila1, fila2, fila3, fila4 };
         for (int i = 0; i < 4; i++)
         {
+            int espaciosDisponibles = todasLasFilas[i].Count - lineas[i].Length;
+            int margenIzquierdo = Mathf.Max(0, (espaciosDisponibles + 1) / 2);
+
             for (int j = 0; j < todasLasFilas[i].Count; j++)  // github lo retiro te quiero 
             {
                 slotLetra slot = todasLasFilas[i][j].GetComponent<slotLetra>();
-                if (j < lineas[i].Length)
+                int posicionEnLaFila = j - margenIzquierdo;
+                if (posicionEnLaFila >= 0 && posicionEnLaFila < lineas[i].Length)
                 {
-                    slot.SetLetra(lineas[i][j]);
+                    slot.SetLetra(lineas[i][posicionEnLaFila]);
                 }
                 else
                 {
