@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class ItemPickUp : MonoBehaviour
 {
-    MeshFilter meshFilter;
-    MeshRenderer meshRenderer;
-    MeshCollider meshCollider;
+    [SerializeField] private MeshFilter meshFilter;
+    [SerializeField] private MeshRenderer meshRenderer;
+    [SerializeField] private MeshCollider meshCollider;
     ShopItemData data;
 
 

@@ -106,14 +106,16 @@ public class ShopManager : MonoBehaviour
     public void TryBuy(ShopSlot slot)
     {
         if (slot == null) return;
-
+        
+        if(slot.CurrentItem == null) return;
+        
         var item = slot.CurrentItem;
 
-        if (money < slot.CurrentItem.Price) return;
+        if (money < item.Price) return;
         
-        money -= slot.CurrentItem.Price;
+        money -= item.Price;
         
-        Instantiate(itemPickUp.gameObject, buy.position, buy.rotation);
+        Instantiate(itemPickUp, buy.position, buy.rotation);
         
         itemPickUp.SetUp(item);
 

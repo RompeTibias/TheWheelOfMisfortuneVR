@@ -8,7 +8,6 @@ public class ShopSlot : MonoBehaviour
     [SerializeField] private TextMeshPro precio;
     [SerializeField] private GameObject visual;
     private ShopItemData currentItem;
-    [SerializeField] private ShopItemData testItem;
     ShopManager managerShop;
     public bool IsEmpty => currentItem == null;
 
@@ -20,6 +19,10 @@ public class ShopSlot : MonoBehaviour
         }   
     }
 
+    public void OnSelected()
+    {
+        managerShop.TryBuy(this);
+    }
     public void SetManager(ShopManager manager)
     {
         managerShop = manager;

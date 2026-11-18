@@ -285,3 +285,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f5b8ee469ed9e743b092e336b258723, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPickUp
+  meshFilter: {fileID: 6630698499591934841}
+  meshRenderer: {fileID: 6369588496454641087}
+  meshCollider: {fileID: 6797334686354664434}
