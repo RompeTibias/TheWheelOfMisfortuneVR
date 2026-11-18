@@ -12,6 +12,20 @@ public class managerPanel : MonoBehaviour
     //[SerializeField] private List<GameObject> fila5 = new List<GameObject>();
     [SerializeField] private string frasePrueba = "Github si no paras de autocompletarme las lineas te voy a arrancar las tripas;";
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    
+    private void OnEnable()
+    {
+        LetrasElegir.OnLetraElegida += ProcesarLetraRecibida;
+    }
+    private void OnDisable()
+    {
+        LetrasElegir.OnLetraElegida -= ProcesarLetraRecibida;
+    }
+
+    private void ProcesarLetraRecibida(char letra)
+    {
+        Aciertos(letra);
+    }
     void Start()
     {
         CargarFrase(frasePrueba);

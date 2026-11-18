@@ -1,10 +1,12 @@
 using TMPro;
 using UnityEngine;
+using System;
 
 public class LetrasElegir : MonoBehaviour
   
 {
-    [SerializeField] private managerPanel manager;//preguntar a paco si esto o findobjects por el prefab y rendimiento
+    public static event Action<char> OnLetraElegida;
+    //[SerializeField] private managerPanel manager;//preguntar a paco si esto o findobjects por el prefab y rendimiento
     [SerializeField] private TextMeshPro letra;
     public char letraElegida;
     private void OnMouseDown()//temporal para probar sin vr
@@ -19,8 +21,9 @@ public class LetrasElegir : MonoBehaviour
     }
     void Interracionado()//no se como llamr con lo de vr tengo que mirar es con lo de gran sera ongrab o algo
     {
-        manager.Aciertos(letraElegida);
+        //manager.Aciertos(letraElegida);
         Debug.Log("letra elegida: " + letraElegida);
+        OnLetraElegida?.Invoke(letraElegida);
     }
         
     
