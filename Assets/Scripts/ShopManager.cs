@@ -21,7 +21,7 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private ItemPickUp itemPickUp;
     [SerializeField] private Transform buy;
     [SerializeField] private int buttonPrice;
-    private bool bellReady ;
+    private bool bellReady = true ;
 
     private void Start()
     {
@@ -105,9 +105,8 @@ public class ShopManager : MonoBehaviour
 
     public void TryBuy(ShopSlot slot)
     {
-        if (slot == null) return;
         
-        if(slot.CurrentItem == null) return;
+        if(slot.IsEmpty) return;
         
         var item = slot.CurrentItem;
 
@@ -115,9 +114,9 @@ public class ShopManager : MonoBehaviour
         
         money -= item.Price;
         
-        Instantiate(itemPickUp, buy.position, buy.rotation);
+        ItemPickUp newItem = Instantiate(itemPickUp, buy.position, buy.rotation);
         
-        itemPickUp.SetUp(item);
+        newItem.SetUp(item);
 
         slot.ClearSlot();
     }
