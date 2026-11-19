@@ -1,27 +1,63 @@
+using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class LetrasElegir : MonoBehaviour
-  
 {
-    [SerializeField] private managerPanel manager;//preguntar a paco si esto o findobjects por el prefab y rendimiento
+    public static event Action<char> OnLetraElegida;
+
     [SerializeField] private TextMeshPro letra;
     public char letraElegida;
-    private void OnMouseDown()//temporal para probar sin vr
+
+    private XRSimpleInteractable simpleInteractable;
+
+    private void Awake()
+    {
+        simpleInteractable = GetComponent<XRSimpleInteractable>();
+    }
+
+    private void OnEnable()
+    {
+        if (simpleInteractable != null)
+        {
+            // Cambiamos 'selectEntered' por 'activated' (Gatillo de atrás / Trigger)
+            simpleInteractable.activated.AddListener(OnLetraSeleccionada);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (simpleInteractable != null)
+        {
+            simpleInteractable.activated.RemoveListener(OnLetraSeleccionada);
+        }
+    }
+
+    void Start()
+    {
+        if (letra != null)
+        {
+            letra.text = letraElegida.ToString();
+        }
+    }
+
+    // Se ejecuta al pulsar el gatillo de atrás mirando al objeto
+    private void OnLetraSeleccionada(ActivateEventArgs args)
     {
         Interracionado();
-        Debug.Log("el click funciona " );
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()//si uqeremos jugar en algun momento con esto habria que poner por codigo la letra por si hacemos un panel que se muevan o algo `pero de momento no hace falta
+
+    private void OnMouseDown()
     {
-        letra.text = letraElegida.ToString();//el etxtmesh no coge chars
+        Interracionado();
+        Debug.Log("El click de prueba funciona");
     }
-    void Interracionado()//no se como llamr con lo de vr tengo que mirar es con lo de gran sera ongrab o algo
+
+    void Interracionado()
     {
-        manager.Aciertos(letraElegida);
-        Debug.Log("letra elegida: " + letraElegida);
+        Debug.Log("Letra elegida: " + letraElegida);
+        OnLetraElegida?.Invoke(letraElegida);
     }
-        
-    
 }
