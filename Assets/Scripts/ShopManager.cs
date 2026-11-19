@@ -11,7 +11,7 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private List<ShopItemData> reload2;   // Segunda lista de objetos de la tienda
     [SerializeField] private List<ShopItemData> reload3;   // tercera lista de objetos de la tienda
     private List<ShopItemData> objects = new List<ShopItemData>();//Lista de todos los objetos segun el dinero que tienes
-   
+    private List<ShopItemData> purchased = new List<ShopItemData>();
    
     [Header("Huecos en la tienda")]
     [SerializeField] private List<ShopSlot> slots = new List<ShopSlot>();
@@ -72,7 +72,14 @@ public class ShopManager : MonoBehaviour
         {
             objects.AddRange(reload3);
         }
+
+        foreach ( ShopItemData bought  in purchased)
+        {
+            objects.Remove(bought);
+        }
+        
         int amountToShow;
+        
         if (objects.Count == 0)
         {
             amountToShow = 0;
@@ -113,6 +120,8 @@ public class ShopManager : MonoBehaviour
         if (money < item.Price) return;
         
         money -= item.Price;
+        
+        purchased.Add(item);
         
         ItemPickUp newItem = Instantiate(itemPickUp, buy.position, buy.rotation);
         
