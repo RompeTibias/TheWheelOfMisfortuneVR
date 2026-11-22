@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: 
   description: 
   price: 5
-  meshRing: {fileID: 8321685774571456786, guid: 9e1dc1c14313460d872de39e35129b39, type: 3}
+  meshRing: {fileID: 6589797591615164655, guid: d6c6f0162347bf84e8401e6acdefc00a, type: 3}
   materials:
-  - {fileID: 2100000, guid: 3a73f1dd1bef6444c9b915e01a983999, type: 2}
+  - {fileID: 1743980999017657375, guid: d6c6f0162347bf84e8401e6acdefc00a, type: 3}
   rarity: 0
