@@ -10,7 +10,7 @@ public class managerPanel : MonoBehaviour
     [SerializeField] protected List<GameObject> fila2 = new List<GameObject>();
     [SerializeField] protected List<GameObject> fila3 = new List<GameObject>();
     [SerializeField] protected List<GameObject> fila4 = new List<GameObject>();
-    //[SerializeField] protected List<GameObject> fila5 = new List<GameObject>();
+    [SerializeField] protected List<GameObject> fila5 = new List<GameObject>();
 
     [SerializeField] protected string frasePrueba = "Github si no paras de autocompletarme las lineas te voy a arrancar las tripas;";
 
@@ -84,7 +84,7 @@ public class managerPanel : MonoBehaviour
 
         foreach (string palabra in palabras)
         {
-            if (filaActual >= 4) break;
+            if (filaActual >= 5) break;
 
             if (lineas[filaActual].Length == 0)
             {
@@ -97,15 +97,15 @@ public class managerPanel : MonoBehaviour
             else
             {
                 filaActual++;
-                if (filaActual < 4)
+                if (filaActual < 5)
                 {
                     lineas[filaActual] = palabra;
                 }
             }
         }
 
-        List<List<GameObject>> todasLasFilas = new List<List<GameObject>> { fila1, fila2, fila3, fila4 };
-        for (int i = 0; i < 4; i++)
+        List<List<GameObject>> todasLasFilas = new List<List<GameObject>> { fila1, fila2, fila3, fila4, fila5 };
+        for (int i = 0; i < 5; i++)
         {
             int espaciosDisponibles = todasLasFilas[i].Count - lineas[i].Length;
             int margenIzquierdo = Mathf.Max(0, (espaciosDisponibles + 1) / 2);

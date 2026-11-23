@@ -6,7 +6,7 @@ public class regularPanel : managerPanel
     // dándole al Play antes de conectar tu futuro CSV Reader.
     protected override void Start()
     {
-        base.Start();
+        
         CargarFrase(frasePrueba);
     }
 }
