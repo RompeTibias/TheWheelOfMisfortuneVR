@@ -1,7 +1,7 @@
 using UnityEngine;
-enum rarezas
+public enum Rarity
 {
-    Comon,
+    Common,
     Rare,
     Epic,
     Legendary
@@ -15,6 +15,7 @@ enum rarezas
 
 public class ShopItemData : ScriptableObject
 {
+    public static ShopItemData Instance;
     [Header("Information")]
     [SerializeField] private string displayName;
     [TextArea]
@@ -25,7 +26,7 @@ public class ShopItemData : ScriptableObject
     [SerializeField] private Mesh meshRing;
     [SerializeField] private Material[] materials;
 
-    [SerializeField] private rarezas rarity;
+    [SerializeField] private Rarity rarity;
 
 
     public int Price
@@ -49,6 +50,14 @@ public class ShopItemData : ScriptableObject
         get
         {
             return materials;
+        }
+    }
+
+    public Rarity Rarity
+    {
+        get
+        {
+            return rarity;
         }
     }
 }

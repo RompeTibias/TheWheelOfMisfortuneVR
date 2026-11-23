@@ -18,4 +18,4 @@ MonoBehaviour:
   meshRing: {fileID: 6359149899462368893, guid: d6b479fbcc02ab64fb223ec4acf330f5, type: 3}
   materials:
   - {fileID: 7862799075533506765, guid: d6b479fbcc02ab64fb223ec4acf330f5, type: 3}
-  rarity: 0
+  rarity: 2

@@ -1106,13 +1106,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f20a9195481af74a8f8854a94534552, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopManager
-  reload1:
+  allItems:
   - {fileID: 11400000, guid: 3c5fbb03a22b722448dc006fe653fa52, type: 2}
   - {fileID: 11400000, guid: 588cf5173e21213499ba70cc010bfbd2, type: 2}
-  reload2:
   - {fileID: 11400000, guid: 3356b4ca4d079f3419e02a52ed17593f, type: 2}
   - {fileID: 11400000, guid: 1036b7386b1d8c1418aa97d3b07f6a12, type: 2}
-  reload3:
   - {fileID: 11400000, guid: 26f9e40b3654b0c4ab52c0e960f0d395, type: 2}
   - {fileID: 11400000, guid: eb7ca48a4827a864f96458a1c187ae14, type: 2}
   slots:
@@ -1123,9 +1121,11 @@ MonoBehaviour:
   - {fileID: 198052537}
   - {fileID: 806527193}
   money: 2000
+  rounds: 0
   itemPickUp: {fileID: 2850222876057859639, guid: a8d5e799178480e4eaa8ccfd25754148, type: 3}
   buy: {fileID: 1567118824}
   buttonPrice: 10
+  rarityTable: {fileID: 11400000, guid: d20c880f020ecb54f992e820af44b44a, type: 2}
 --- !u!4 &1226336007
 Transform:
   m_ObjectHideFlags: 0
