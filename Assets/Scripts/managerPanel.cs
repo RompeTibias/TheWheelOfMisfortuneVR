@@ -50,6 +50,7 @@ public class managerPanel : MonoBehaviour
         filasJuntas.AddRange(fila2);
         filasJuntas.AddRange(fila3);
         filasJuntas.AddRange(fila4);
+        filasJuntas.AddRange(fila5);
 
         for (int i = 0; i < filasJuntas.Count; i++)
         {
@@ -78,13 +79,18 @@ public class managerPanel : MonoBehaviour
     {
         frase = frase.ToUpper();
 
-        string[] lineas = { "", "", "", "" };
+        List<List<GameObject>> todasLasFilas = new List<List<GameObject>> { fila1, fila2, fila3, fila4, fila5 };
+        string[] lineas = new string[todasLasFilas.Count];
+        for (int i = 0; i < lineas.Length; i++)
+        {
+            lineas[i] = string.Empty;
+        }
         int filaActual = 0;
         string[] palabras = frase.Split(" ", System.StringSplitOptions.RemoveEmptyEntries);
 
         foreach (string palabra in palabras)
         {
-            if (filaActual >= 5) break;
+            if (filaActual >= lineas.Length) break;
 
             if (lineas[filaActual].Length == 0)
             {
@@ -97,15 +103,14 @@ public class managerPanel : MonoBehaviour
             else
             {
                 filaActual++;
-                if (filaActual < 5)
+                if (filaActual < lineas.Length)
                 {
                     lineas[filaActual] = palabra;
                 }
             }
         }
 
-        List<List<GameObject>> todasLasFilas = new List<List<GameObject>> { fila1, fila2, fila3, fila4, fila5 };
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < lineas.Length; i++)
         {
             int espaciosDisponibles = todasLasFilas[i].Count - lineas[i].Length;
             int margenIzquierdo = Mathf.Max(0, (espaciosDisponibles + 1) / 2);
