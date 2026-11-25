@@ -15,7 +15,6 @@ public enum Rarity
 
 public class ShopItemData : ScriptableObject
 {
-    public static ShopItemData Instance;
     [Header("Information")]
     [SerializeField] private string displayName;
     [TextArea]
@@ -27,6 +26,9 @@ public class ShopItemData : ScriptableObject
     [SerializeField] private Material[] materials;
 
     [SerializeField] private Rarity rarity;
+    
+    [Header("Identificador")]
+    [SerializeField] private string id;
 
 
     public int Price
@@ -60,4 +62,10 @@ public class ShopItemData : ScriptableObject
             return rarity;
         }
     }
+    
+    #if UNITY_EDITOR
+    public void ApplyImport(
+        string newName, string newDescription, int newPrice, Rarity newRarity 
+    ){}
+    #endif
 }

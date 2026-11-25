@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0243108c4dcaf7d4183da9d7387ff43c, type: 3}
+  m_Name: SheetImporter
+  m_EditorClassIdentifier: Assembly-CSharp-Editor::SheetImporter
+  objectLink: https://docs.google.com/spreadsheets/d/e/2PACX-1vQQ7Lj1T_DEC9PdKe7h-TBLiN3MpH-zTAGa89RPcZZFc8h5JGvmVGSvyjUTE2gNZ5FSvQRzFiYmhSiW/pub?gid=532305405&single=true&output=tsv
+  parameterLink: https://docs.google.com/spreadsheets/d/e/2PACX-1vQQ7Lj1T_DEC9PdKe7h-TBLiN3MpH-zTAGa89RPcZZFc8h5JGvmVGSvyjUTE2gNZ5FSvQRzFiYmhSiW/pub?gid=532305405&single=true&output=tsv
+  rarityTable: {fileID: 11400000, guid: d20c880f020ecb54f992e820af44b44a, type: 2}

@@ -26,6 +26,16 @@ public class RarityWeights
                 return 0;
         }
     }
+    
+    #if UNITY_EDITOR
+    public void Set( float comun, float rara, float epica, float legendaria)
+    {
+        common = comun;
+        rare = rara;
+        epic = epica;
+        legendary = legendaria;
+    }
+    #endif
 }
 [CreateAssetMenu(fileName = "RarityTable", menuName = "ScriptableObjects/RarityTable")]
 public class RarityTable : ScriptableObject
@@ -67,6 +77,18 @@ public class RarityTable : ScriptableObject
        float interpolate =  Mathf.Lerp(roundOne,roundMaxime,t);
        
        return interpolate;
+    }
+
+    public void ApplyImport(
+        float common1, float rare1, float epic1, float legendary1,
+        float commonMax, float rareMax, float epicMax, float legendaryMax,
+        int newRoundMax, float newCurve
+        )
+    {
+        weightsRoundOne.Set(common1,rare1,epic1,legendary1);
+        weightsRoundMax.Set(commonMax,rareMax,epicMax,legendaryMax);
+        roundMax = newRoundMax;
+        curve = newCurve;
     }
 }
 
