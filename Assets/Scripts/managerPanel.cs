@@ -1,10 +1,14 @@
-using UnityEngine;
-using TMPro;
+using System;
 using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Events;
 
 public class managerPanel : MonoBehaviour
 {
     internal bool LetrasGestionadasPorTurno { get; set; }
+    public static event Action<int> AciertosEvent;
+
     // ORDEN L>R las letras del panel de letras 
     // protected para que los hijos puedan leer les listas
     [SerializeField] protected List<GameObject> fila1 = new List<GameObject>();
@@ -44,7 +48,7 @@ public class managerPanel : MonoBehaviour
     }
 
     
-    public virtual int Aciertos(char letraIntentada)
+    public virtual void Aciertos(char letraIntentada)
     {
         int aciertos = 0;
         List<GameObject> filasJuntas = new List<GameObject>();
@@ -74,7 +78,7 @@ public class managerPanel : MonoBehaviour
             Debug.Log("la letra " + letraIntentada + " esta en la frase y se ha revelado " + aciertos + " veces");
         }
 
-        return aciertos;
+        //return aciertos;
     }
 
     public virtual void CargarFrase(string frase)
