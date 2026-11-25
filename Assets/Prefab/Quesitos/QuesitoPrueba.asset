@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23b46df2ea5343b5962ac6a86baa9f4c, type: 3}
   m_Name: QuesitoPrueba
   m_EditorClassIdentifier: Assembly-CSharp::QuesitoRuleta
-  nombre: 
-  descripcion: 
+  nombre: Mas doscientos
+  descripcion: Mas doscientos
   rareza: 0
-  material: {fileID: 0}
-  tieneHabilidadPostGiro: 0
-  tieneHabilidadFallo: 0
-  tieneHabilidadAcierto: 0
-  tieneHabilidadResolver: 0
+  material: {fileID: 2100000, guid: 53c16fb5d5c516b40a1f6a8fc34132f3, type: 2}
+  postGiro: {fileID: 0}
+  fallo: {fileID: 0}
+  acierto: {fileID: 0}
+  resolver: {fileID: 0}

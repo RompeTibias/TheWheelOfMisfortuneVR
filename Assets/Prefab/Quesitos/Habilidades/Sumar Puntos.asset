@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91092f8489c44ddea47980264b142659, type: 3}
   m_Name: Sumar Puntos
   m_EditorClassIdentifier: Assembly-CSharp::HabilidadSumarPuntos
-  puntosExtra: 100
+  puntosExtra: 200
