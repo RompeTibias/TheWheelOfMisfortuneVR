@@ -78,6 +78,7 @@ public class managerPanel : MonoBehaviour
             Debug.Log("la letra " + letraIntentada + " esta en la frase y se ha revelado " + aciertos + " veces");
         }
 
+        AciertosEvent?.Invoke(aciertos);
         //return aciertos;
     }
 

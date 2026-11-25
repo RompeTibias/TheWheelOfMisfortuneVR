@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
     public float pointsNeeded;
     public float actualRound;
     public float moneyActual;
+    private int hitsActual;
     [System.Serializable]
     private class Quesito
     {
@@ -51,19 +52,29 @@ public class GameManager : MonoBehaviour
 
     private void OnEnable()
     {
+        managerPanel.AciertosEvent += HitsEvent;
+        LetrasElegir.OnLetraElegida += ProcesarLetra;
+       
         if (ruletaVRuno == null || panel == null)
+
         {
             Debug.LogError("GameManager necesita una ruleta y un panel de letras.", this);
             return;
         }
 
         panel.LetrasGestionadasPorTurno = true;
-        LetrasElegir.OnLetraElegida += ProcesarLetra;
+       
+
     }
+
 
     private void OnDisable()
     {
+
+        managerPanel.AciertosEvent -= HitsEvent;
         LetrasElegir.OnLetraElegida -= ProcesarLetra;
+
+
         if (panel != null)
             panel.LetrasGestionadasPorTurno = false;
         if (quesitoPendiente >= 0 && ruletaVRuno != null)
@@ -100,18 +111,17 @@ public class GameManager : MonoBehaviour
         {
             Quesito quesito = ObtenerQuesito(indice);
             QuesitoRuleta ficha = quesito?.ficha;
-            int aciertos = panel.Aciertos(letra);
-            if (aciertos == 0)
+            if (hitsActual == 0)
             {
                 EjecutarHabilidad(ficha?.fallo, letra);
                 return;
             }
 
-            pointsActual += (quesito?.puntos ?? 1f) * aciertos;
+            pointsActual += (quesito?.puntos ?? 1f) * hitsActual;
             indicadorActivo = quesito?.indicador;
             if (indicadorActivo != null)
                 indicadorActivo.SetActive(true);
-            EjecutarHabilidad(ficha?.acierto, letra, aciertos);
+            EjecutarHabilidad(ficha?.acierto, letra, hitsActual);
         }
         finally
         {
@@ -147,4 +157,9 @@ public class GameManager : MonoBehaviour
     {
         return indice >= 0 && indice < quesitos.Length ? quesitos[indice] : null;
     }
+    private void HitsEvent(int aciertos)
+    {
+        hitsActual = aciertos;
+    }
 }
+
