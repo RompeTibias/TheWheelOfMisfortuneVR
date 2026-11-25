@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class managerPanel : MonoBehaviour
 {
+    internal bool LetrasGestionadasPorTurno { get; set; }
     // ORDEN L>R las letras del panel de letras 
     // protected para que los hijos puedan leer les listas
     [SerializeField] protected List<GameObject> fila1 = new List<GameObject>();
@@ -28,7 +29,8 @@ public class managerPanel : MonoBehaviour
     // lo mismo el virtual para que los hijos puedan modificar
     protected virtual void ProcesarLetraRecibida(char letra)
     {
-        Aciertos(letra);
+        if (!LetrasGestionadasPorTurno)
+            Aciertos(letra);
     }
 
     protected virtual void Start()

@@ -1,39 +1,43 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
-/// <summary>
-/// Control de ruleta estilo "Ruleta de la Suerte" en VR.
-/// Mantiene la inercia del impulso al soltar sin cambios bruscos de fuerza.
-/// </summary>
-public class RuletaVR : MonoBehaviour
+public class RuletaVRuno : MonoBehaviour
 {
-    [Header("Referencias Principales")]
-
-    [Tooltip("El pivote o centro que rotará (si se deja vacío, usa este objeto).")]
     [SerializeField] private Transform centroRuleta;
-
-    [Header("Configuración de Eje")]
-
-    [Tooltip("Eje local de giro: (0,0,1) para pared, (0,1,0) para mesa.")]
     [SerializeField] private Vector3 ejeRotacionLocal = Vector3.forward;
-
-    [Header("Física de la Ruleta de la Suerte")]
-
-    [Tooltip("Resistencia al giro. Valores bajos (0.3 - 0.8) hacen que gire durante más tiempo.")]
     [SerializeField] private float friccion = 0.5f;
-
-    [Tooltip("Filtro de suavizado de la mano. Evita tirones o saltos bruscos justo al soltar.")]
     [SerializeField] private float suavizadoMando = 15f;
 
+    [Header("Quesitos")]
+    [SerializeField, Min(1)] private int cantidadQuesitos = 8;
+    [SerializeField] private bool numerosEnSentidoPositivo = true;
+    [SerializeField] private float desfaseInicialGrados;
+
+    public float BloqueoGiro;
+    public bool EstaGirando { get; private set; }
+    public int QuesitoCaido { get; private set; } = -1;
+    private bool resultadoDisponible;
+
+    public bool IntentarTomarResultado(out int indice)
+    {
+        indice = QuesitoCaido;
+        if (EstaGirando || !resultadoDisponible)
+            return false;
+
+        resultadoDisponible = false;
+        return true;
+    }
+
+    private const float VelocidadMinima = 0.01f;
     private XRBaseInteractable[] interactables;
     private IXRSelectInteractor interactorActual;
-
+    private IXRSelectInteractable interactableActual;
     private Vector3 direccionPreviaMundo;
-    private float velocidadAngular = 0f;
-    private bool estaAgarrado = false;
+    private float velocidadAngular;
+    private float anguloAcumulado;
+    private bool resultadoPendiente;
 
     private void Awake()
     {
@@ -43,11 +47,8 @@ public class RuletaVR : MonoBehaviour
         interactables = GetComponentsInChildren<XRBaseInteractable>(true);
 
         Rigidbody rb = GetComponent<Rigidbody>();
-
         if (rb == null)
-        {
             rb = gameObject.AddComponent<Rigidbody>();
-        }
 
         rb.isKinematic = true;
         rb.useGravity = false;
@@ -55,103 +56,139 @@ public class RuletaVR : MonoBehaviour
 
     private void OnEnable()
     {
-        if (interactables != null)
+        foreach (var interactable in interactables)
         {
-            foreach (var inter in interactables)
-            {
-                inter.selectEntered.AddListener(AlAgarrar);
-                inter.selectExited.AddListener(AlSoltar);
-            }
+            interactable.selectEntered.AddListener(AlAgarrar);
+            interactable.selectExited.AddListener(AlSoltar);
         }
     }
 
     private void OnDisable()
     {
-        if (interactables != null)
+        foreach (var interactable in interactables)
         {
-            foreach (var inter in interactables)
-            {
-                inter.selectEntered.RemoveListener(AlAgarrar);
-                inter.selectExited.RemoveListener(AlSoltar);
-            }
+            interactable.selectEntered.RemoveListener(AlAgarrar);
+            interactable.selectExited.RemoveListener(AlSoltar);
         }
+
+        SoltarAgarre();
+        velocidadAngular = 0f;
+        EstaGirando = false;
+        RegistrarResultado();
     }
 
     private void AlAgarrar(SelectEnterEventArgs args)
     {
+        if (BloqueoGiro > 0f || interactorActual != null)
+            return;
+
         interactorActual = args.interactorObject;
-        estaAgarrado = true;
+        interactableActual = args.interactableObject;
 
         Vector3 ejeMundo = centroRuleta.TransformDirection(ejeRotacionLocal);
-
-        Vector3 vecInter = interactorActual.transform.position - centroRuleta.position;
-
-        direccionPreviaMundo = Vector3.ProjectOnPlane(vecInter, ejeMundo).normalized;
+        direccionPreviaMundo = ObtenerDireccionMando(ejeMundo);
     }
 
     private void AlSoltar(SelectExitEventArgs args)
     {
-        interactorActual = null;
-        estaAgarrado = false;
+        if (args.interactorObject == interactorActual &&
+            args.interactableObject == interactableActual)
+        {
+            SoltarAgarre();
+        }
+    }
 
-        // Al soltar, el valor acumulado en velocidadAngular
-        // se mantiene intacto sin tirones.
+    private void SoltarAgarre()
+    {
+        interactorActual = null;
+        interactableActual = null;
     }
 
     private void Update()
     {
+        if (BloqueoGiro > 0f && interactorActual != null)
+            SoltarAgarre();
+
+        EstaGirando = false;
         Vector3 ejeMundo = centroRuleta.TransformDirection(ejeRotacionLocal);
+        float tiempo = Time.deltaTime;
 
-        if (estaAgarrado && interactorActual != null)
+        if (interactorActual != null)
         {
-            Vector3 vecActual = interactorActual.transform.position - centroRuleta.position;
+            Vector3 direccionActual = ObtenerDireccionMando(ejeMundo);
+            float deltaAngulo = 0f;
 
-            Vector3 direccionActualMundo = Vector3.ProjectOnPlane(vecActual, ejeMundo).normalized;
-
-            if (direccionPreviaMundo.sqrMagnitude > 0.001f && direccionActualMundo.sqrMagnitude > 0.001f)
+            if (direccionPreviaMundo.sqrMagnitude > 0.001f &&
+                direccionActual.sqrMagnitude > 0.001f)
             {
-                float deltaAngulo = Vector3.SignedAngle(
-                    direccionPreviaMundo,
-                    direccionActualMundo,
-                    ejeMundo
-                );
+                deltaAngulo = Vector3.SignedAngle(
+                    direccionPreviaMundo, direccionActual, ejeMundo);
 
-                // Rotar la ruleta siguiendo el movimiento del mando
-                centroRuleta.Rotate(ejeMundo, deltaAngulo, Space.World);
-
-                // Calcular velocidad instantánea y filtrarla progresivamente
-                if (Time.deltaTime > 0f)
-                {
-                    float velInstantanea = deltaAngulo / Time.deltaTime;
-
-                    velocidadAngular = Mathf.Lerp(
-                        velocidadAngular,
-                        velInstantanea,
-                        Time.deltaTime * suavizadoMando
-                    );
-                }
-
-                direccionPreviaMundo = direccionActualMundo;
+                Girar(ejeMundo, deltaAngulo);
             }
+
+            direccionPreviaMundo = direccionActual;
+
+            if (tiempo > 0f)
+            {
+                velocidadAngular = Mathf.Lerp(
+                    velocidadAngular, deltaAngulo / tiempo, tiempo * suavizadoMando);
+            }
+
+            return;
         }
-        else if (Mathf.Abs(velocidadAngular) > 0.01f)
+
+        if (Mathf.Abs(velocidadAngular) > VelocidadMinima)
         {
-            // La ruleta sigue girando tras soltarla con la velocidad acumulada
-            float rotacionFrame = velocidadAngular * Time.deltaTime;
+            Girar(ejeMundo, velocidadAngular * tiempo);
 
-            centroRuleta.Rotate(ejeMundo, rotacionFrame, Space.World);
+            float resistencia = Mathf.Max(0.001f, friccion);
+            float frenado = (Mathf.Abs(velocidadAngular) * 0.5f + 10f)
+                * resistencia * tiempo;
 
-            // Frenado progresivo natural (resistencia proporcional + fricción constante)
-            float desaceleracion = (
-                Mathf.Abs(velocidadAngular) * friccion * 0.5f
-                + 10f * friccion
-            ) * Time.deltaTime;
-
-            velocidadAngular = Mathf.MoveTowards(
-                velocidadAngular,
-                0f,
-                desaceleracion
-            );
+            velocidadAngular = Mathf.MoveTowards(velocidadAngular, 0f, frenado);
         }
+
+        if (Mathf.Abs(velocidadAngular) <= VelocidadMinima)
+        {
+            velocidadAngular = 0f;
+            EstaGirando = false;
+            RegistrarResultado();
+        }
+    }
+
+    private Vector3 ObtenerDireccionMando(Vector3 ejeMundo)
+    {
+        Vector3 haciaMando = interactorActual.transform.position - centroRuleta.position;
+        return Vector3.ProjectOnPlane(haciaMando, ejeMundo).normalized;
+    }
+
+    private void Girar(Vector3 ejeMundo, float grados)
+    {
+        if (grados == 0f)
+            return;
+
+        centroRuleta.Rotate(ejeMundo, grados, Space.World);
+        anguloAcumulado = Mathf.Repeat(anguloAcumulado + grados, 360f);
+        EstaGirando = true;
+        resultadoPendiente = true;
+        QuesitoCaido = -1;
+        resultadoDisponible = false;
+    }
+
+    private void RegistrarResultado()
+    {
+        if (!resultadoPendiente)
+            return;
+
+        int total = Mathf.Max(1, cantidadQuesitos);
+        float gradosPorQuesito = 360f / total;
+        float sentido = numerosEnSentidoPositivo ? 1f : -1f;
+        float anguloBajoPuntero = desfaseInicialGrados - anguloAcumulado * sentido;
+        float angulo = Mathf.Repeat(anguloBajoPuntero + gradosPorQuesito * 0.5f, 360f);
+
+        QuesitoCaido = Mathf.FloorToInt(angulo / gradosPorQuesito) % total;
+        resultadoDisponible = true;
+        resultadoPendiente = false;
     }
 }
