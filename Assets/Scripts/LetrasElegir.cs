@@ -3,11 +3,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using UnityEngine.Events;
 
 public class LetrasElegir : MonoBehaviour
 {
     public static event Action<char> OnLetraElegida;
-
     [SerializeField] private TextMeshPro letra;
     public char letraElegida;
 
@@ -49,11 +49,11 @@ public class LetrasElegir : MonoBehaviour
         Interracionado();
     }
 
-    private void OnMouseDown()
-    {
-        Interracionado();
-        Debug.Log("El click de prueba funciona");
-    }
+    //private void OnMouseDown()
+    //{
+    //    Interracionado();
+    //    Debug.Log("El click de prueba funciona");
+    //}
 
     void Interracionado()
     {
